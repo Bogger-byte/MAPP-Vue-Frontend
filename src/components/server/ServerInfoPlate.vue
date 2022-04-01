@@ -23,7 +23,7 @@ const { serverData } = defineProps({
         </div>
         <div>
           <div class="text-sm">owner</div>
-          <router-link :to="{ name: 'Profile', params: { userID: serverData.owner.id } }"
+          <router-link :to="{ name: 'User', params: { id: serverData.owner.id } }"
                        class="no-underline text-blue-500 font-bold">
             {{ serverData.owner.username }} <i class="pi pi-external-link font-bold text-xs"/>
           </router-link>

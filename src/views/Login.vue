@@ -2,14 +2,19 @@
 import {getCurrentInstance, onMounted, ref} from "vue";
 import {useUserStore} from "../stores/user.store";
 
+const { toRoute } = defineProps({
+  toRoute: {
+    default: { name: 'User', params: { id: 'me' } }
+  }
+})
+
 const username = ref('');
 const password = ref('');
 const checked = ref(false);
+const authError = ref(false);
 
 const userStore = useUserStore();
 const { proxy } = getCurrentInstance();
-
-const toRoute = proxy.$route.meta?.toRoute;
 
 onMounted(() => {
   if (userStore.isLoggedIn) {
@@ -18,8 +23,15 @@ onMounted(() => {
 });
 
 async function login() {
-  await userStore.login(username.value, password.value);
-  await proxy.$router.push({ name: 'Profile', params: { userID: 'me' } });
+  try {
+    await userStore.login(username.value, password.value);
+    authError.value = false;
+    await proxy.$router.push({ name: 'User', params: { id: 'me' } });
+  } catch (error) {
+    if (error.response.status < 500) {
+      authError.value = true;
+    }
+  }
 }
 </script>
 
@@ -39,17 +51,32 @@ async function login() {
       </div>
 
       <div class="mt-3">
-        <label for="username" class="block text-700 text-md mb-1">
-          Username
-        </label>
-        <InputText v-model="username" id="username" type="text" class="w-full mb-3" />
-
-        <label for="password" class="block text-700 text-md mb-1">
-          Password
-        </label>
-        <InputText v-model="password" id="password" type="password" class="w-full mb-3" />
+        <div class="field">
+          <label for="username" class="block text-700 text-md mb-1">
+            Username
+          </label>
+          <InputText v-model="username" id="username" type="text"
+                     aria-describedby="username-help"
+                     class="w-full"
+                     :class="{'p-invalid': authError}"/>
+          <small id="username-help" class="p-error">
+            Username or password are not valid.
+          </small>
+        </div>
+        <div class="field">
+          <label for="password" class="block text-700 text-md mt-3 mb-1">
+            Password
+          </label>
+          <InputText v-model="password" id="password" type="password"
+                     aria-describedby="password-help"
+                     class="w-full"
+                     :class="{'p-invalid': authError}" />
+          <small id="password-help" class="p-error">
+            Username or password are not valid.
+          </small>
+        </div>
       </div>
-      <div class="flex align-items-center justify-content-between text-700">
+      <div class="mt-3 flex align-items-center justify-content-between text-700">
         <div class="flex align-items-center">
           <Checkbox id="remember-me" :binary="true" v-model="checked" class="mr-2"/>
           <label for="remember-me">
@@ -60,7 +87,7 @@ async function login() {
           Forgot password? <i class="pi pi-external-link font-medium text-sm"></i>
         </a>
       </div>
-      <div class="mt-4">
+      <div class="mt-2">
         <Button @click="login" label="Sign In" icon="pi pi-user" class="w-full"/>
       </div>
     </div>

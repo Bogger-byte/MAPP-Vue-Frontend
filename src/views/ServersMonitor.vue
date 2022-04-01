@@ -2,7 +2,6 @@
 import {useUserStore} from "../stores/user.store";
 import {ref, getCurrentInstance, onMounted, onUnmounted} from "vue";
 import {FilterMatchMode} from "primevue/api";
-import Loading from "vue3-loading-overlay";
 
 const userStore = useUserStore();
 const { proxy } = getCurrentInstance();
@@ -50,7 +49,7 @@ function initFilters() {
 }
 
 function viewServer(id) {
-  proxy.$router.push({ name: 'Server', params: { serverID: id } })
+  proxy.$router.push({ name: 'Server', params: { id } })
 }
 </script>
 
@@ -105,22 +104,22 @@ function viewServer(id) {
       <Column header="Description"
               class="py-1 px-2">
         <template #body="{ data }">
-          <div class="text-600 text-sm">
-            {{ data.id }}
-          </div>
-          <div>
-            Server's owner hasn't set server description
+          <div class="text-700 text-sm">
+            Descriptions are not implemented yet
+            <!--            Server's owner hasn't set description-->
           </div>
         </template>
       </Column>
       <Column class="py-1 px-2">
         <template #body="{ data }">
-          <Button v-if="data.available || true" @click="viewServer(data.id)"
-                  type="button" label="View" icon="pi pi-chevron-right" icon-pos="right"
-                  class="p-button-sm"/>
-          <Button v-else
-                  type="button" icon="pi pi-lock"
-                  class="p-button-secondary p-button-sm"/>
+          <div class="flex justify-content-end">
+            <Button v-if="data.available || true" @click="viewServer(data.id)"
+                    type="button" label="View" icon="pi pi-chevron-right" icon-pos="right"
+                    class="p-button-sm"/>
+            <Button v-else
+                    type="button" icon="pi pi-lock"
+                    class="p-button-secondary p-button-sm"/>
+          </div>
         </template>
       </Column>
     </DataTable>
@@ -128,7 +127,7 @@ function viewServer(id) {
 </template>
 
 <style lang="sass" scoped>
-::v-deep(.p-datatable)
+:deep(.p-datatable)
   .p-datatable-header
     padding: 0.25rem
 </style>

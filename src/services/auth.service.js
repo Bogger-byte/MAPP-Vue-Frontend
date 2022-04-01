@@ -16,6 +16,7 @@ class AuthService {
              }
          });
     }
+
     async refreshAccessToken(refreshToken) {
          return await apiBasic.post('/oauth/jwt/refresh', {}, {
              headers: {

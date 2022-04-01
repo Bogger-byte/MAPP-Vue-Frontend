@@ -12,7 +12,7 @@ const email = ref("");
 const checked = ref(false);
 
 async function register() {
-  await UserService.register(username.value, password.value, email.value);
+  await UserService.registerUser(username.value, password.value, email.value);
   await userStore.login(username.value, password.value);
   await proxy.$router.push({ name: "Login" });
 }

@@ -3,21 +3,43 @@ import apiBasic from "../modules/api.basic";
 
 
 class UserService {
-    async register(username, password, email) {
+    async getMe() {
+        return await apiClient.get('/users/me');
+    }
+
+    async deleteMe() {
+        return await apiClient.delete('/users/me');
+    }
+
+    async updateMe(username, password, email) {
+        return await apiClient.patch('/users/me', {
+            username: username,
+            password: password,
+            email: email
+        });
+    }
+
+    async registerUser(username, password, email) {
         return await apiBasic.post( '/users/register', {
             username: username,
             password: password,
             email: email
         });
     }
-    async getMe() {
-        return await apiClient.get('/users/me');
+
+    async getUser(id) {
+        return await apiBasic.get(`/users/${id}`);
     }
-    async getData(id) {
-        return await apiBasic.get('/users', {
-            params: {
-                user_id: id
-            }
+
+    async deleteUser(id) {
+        return await apiClient.delete(`/users/${id}`);
+    }
+
+    async updateUser(id, username, password, email) {
+        return await apiClient.patch(`/users/${id}`, {
+            username: username,
+            password: password,
+            email: email
         });
     }
 }

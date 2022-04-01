@@ -18,7 +18,7 @@ function logout() {
 }
 
 function login() {
-  proxy.$router.push({ name: 'Login'});
+  proxy.$router.replace({ name: 'Login'});
   hideMenu();
 }
 
@@ -40,22 +40,22 @@ function hideMenu() {
                   style="width: 17.1em; max-height: 40em">
       <div v-if="userData">
         <div class="mt-1 text-2xl font-bold text-800">
-          <router-link :to="{ name: 'Profile', params: { userID: 'me' } }"
+          <router-link :to="{ name: 'User', params: { id: 'me' } }"
                        class="no-underline text-blue-500 font-bold cursor-pointer"
                        @click="hideMenu">
             {{ userData.username }} <i class="pi pi-external-link font-bold"/>
           </router-link>
         </div>
-        <div class="font-light text-sm text-600 mt-0">
+        <div class="font-light text-xs text-600 mt-0">
           {{ userData.id }}
         </div>
         <div class="mt-2 surface-card p-2 border-round border-1 border-200">
-          <DataTable v-if="userData.servers"
+          <DataTable v-if="userData.servers.length"
                      :value="userData.servers"
                      responsive-layout="scroll">
             <Column field="name" header="Linked servers" class="p-1">
               <template #body="{ data }">
-                <router-link :to="{ name: 'Server', params: { serverID: data.id } }"
+                <router-link :to="{ name: 'Server', params: { id: data.id } }"
                              class="no-underline font-medium text-blue-500"
                              @click="hideMenu">
                   {{ data.name }}
@@ -63,8 +63,8 @@ function hideMenu() {
               </template>
             </Column>
           </DataTable>
-          <div v-else>
-            No linked servers for now
+          <div v-else class="font-semibold text-700">
+            No linked servers
           </div>
         </div>
         <div class="mt-3">

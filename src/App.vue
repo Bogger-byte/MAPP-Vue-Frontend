@@ -3,6 +3,7 @@ import Navigation from "./components/Navigation.vue";
 </script>
 
 <template>
+  <ConfirmDialog/>
   <div id="#app" style="margin: 10px 5px">
     <Navigation/>
     <router-view/>

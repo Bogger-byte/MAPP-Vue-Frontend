@@ -1,5 +1,5 @@
 <script setup>
-import AccountPopup from "./ProfilePopup.vue";
+import AccountPopup from "./AccountPopup.vue";
 
 import {ref} from "vue";
 
@@ -10,9 +10,9 @@ const items = ref([
       to: { name: 'Home' }
     },
     {
-      label: 'About',
+      label: 'Documentation',
       icon: 'pi pi-info-circle',
-      to: { name: 'About' }
+      to: { name: 'Docs' }
     },
     {
       label: 'Servers Monitor',
@@ -41,7 +41,7 @@ const items = ref([
       </router-link>
     </template>
     <template #end>
-      <account-popup/>
+      <AccountPopup/>
     </template>
   </Menubar>
 </template>

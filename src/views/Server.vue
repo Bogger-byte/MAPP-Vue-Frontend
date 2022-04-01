@@ -1,24 +1,34 @@
 <script setup>
 import {useUserStore} from "../stores/user.store";
 import ServerService from "../services/server.service";
-import {ref, getCurrentInstance, onMounted, onUnmounted, onBeforeMount, watch} from "vue";
+import {ref, getCurrentInstance, onMounted, onUnmounted, onBeforeMount, h} from "vue";
 import ServerInfoPlate from "../components/server/ServerInfoPlate.vue";
 import PlayersDataPlate from "../components/server/PlayersDataPlate.vue";
+import { LMap, LGridLayer, LTileLayer } from "@vue-leaflet/vue-leaflet";
+
+const { id } = defineProps({
+  id: {
+    required: true
+  }
+})
 
 const serverData = ref(null);
 const playersData = ref([]);
 const updatedRegions = ref([]);
 
+const zoom = ref(5);
+const url = ref(null);
+
 const userStore = useUserStore();
 const { proxy } = getCurrentInstance();
-
-const serverID = proxy.$route.params?.serverID;
 
 
 onBeforeMount(async () => {
   try {
-    let response = await ServerService.getData(serverID);
+    let response = await ServerService.getServer(id);
     serverData.value = response.data;
+
+    url.value = "http://localhost:8080/api/server/" + id + "/regions/world/{x}/{z}"
   } catch (error) {
     if (error.response.status === 404) {
       await proxy.$router.push({ name: "NotFound" });
@@ -32,7 +42,7 @@ onMounted(async () => {
   proxy.$socket.onopen = (_) => {
     proxy.$socket.sendObj({
       access_token: userStore.accessToken,
-      channel: { name: "server_data", id: serverID }
+      channel: { name: "server_data", id }
     });
     console.log("Connected")
   }
@@ -85,12 +95,11 @@ function handleClickOnPlayer(playerData) {
         Updated regions: {{ updatedRegions }}
       </div>
     </div>
-    <div id="map">
-      <div
-          class="absolute z-0 right-0 bottom-0">
-        // tile map //
-      </div>
-    </div>
+<!--    <l-map id="map"-->
+<!--           v-model:zoom="zoom"-->
+<!--           :center="[47.41322, -1.219482]">-->
+<!--      <l-tile-layer :url="url"/>-->
+<!--    </l-map>-->
   </div>
 </template>
 

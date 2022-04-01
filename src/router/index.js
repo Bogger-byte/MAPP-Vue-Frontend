@@ -1,77 +1,82 @@
-import { createWebHistory, createRouter } from "vue-router";
+import { createWebHistory, createRouter } from 'vue-router';
 
-import { useUserStore } from "../stores/user.store";
+import { useUserStore } from '../stores/user.store';
 
-import NotFound from "../views/NotFound.vue";
-import Home from "../views/Home.vue";
-import About from "../views/About.vue";
-import ServersMonitor from "../views/ServersMonitor.vue";
-import Profile from "../views/Profile.vue";
-import Login from "../views/Login.vue";
-import Register from "../views/Register.vue";
-import Server from "../views/Server.vue";
+import NotFound from '../views/NotFound.vue';
+import Home from '../views/Home.vue';
+import Docs from '../views/Docs.vue';
+import ServersMonitor from '../views/ServersMonitor.vue';
+import User from '../views/User.vue';
+import Login from '../views/Login.vue';
+import Register from '../views/Register.vue';
+import Server from '../views/Server.vue';
+import UserSettings from "../components/user/UserSettings.vue";
+import UserOverview from "../components/user/UserOverview.vue";
 
 
 const routes = [
     {
         path: '/:pathMatch(.*)*',
-        name: "NotFound",
+        name: 'NotFound',
         component: NotFound
     },
     {
-        path: "/",
-        name: "Home",
+        path: '/',
+        name: 'Home',
         component: Home
     },
     {
-        path: "/about",
-        name: "About",
-        component: About
+        path: '/docs',
+        name: 'Docs',
+        component: Docs
     },
     {
-        path: "/servers-monitor",
-        name: "ServersMonitor",
+        path: '/servers-monitor',
+        name: 'ServersMonitor',
         component: ServersMonitor
     },
     {
-        path: "/users/:userID",
-        name: "Profile",
-        component: Profile,
-        meta: {
-            requiresAuth: true,
-            userID: 'me'
+        path: '/users/:id',
+        name: 'User',
+        component: User,
+        props: true,
+        meta: { requiresAuth: true },
+        children: [{
+            path: '',
+            name: 'UserOverview',
+            props: true,
+            component: UserOverview,
         },
-        beforeRouteEnter(to, from, next) {
-            console.log("asdasdas")
-            const userStore = useUserStore();
-            if (to.meta?.userID === userStore.data?.id) {
-                next({ name: 'Profile' });
-            }
-        }
+        {
+            path: 'settings',
+            name: 'UserSettings',
+            props: true,
+            component: UserSettings,
+            meta: { requiresAuth: true }
+        }]
     },
     {
-        path: "/login",
-        name: "Login",
+        path: '/login',
+        name: 'Login',
         component: Login,
-        meta: {
-            toRoute: { name: 'Profile' }
-        },
+        props: true,
         beforeRouteEnter(to, from, next) {
             const userStore = useUserStore();
             if (userStore.isLoggedIn) {
-                next({ name: 'Profile' });
+                next({ name: 'User' });
             }
         }
     },
     {
-        path: "/register",
-        name: "Register",
+        path: '/register',
+        name: 'Register',
         component: Register
     },
     {
-        path: "/servers/:serverID",
-        name: "Server",
+        path: '/servers/:id',
+        name: 'Server',
         component: Server,
+        props: true
     }
 ];
 

@@ -6,13 +6,16 @@ import router from "./router";
 import { createPinia } from "pinia/dist/pinia";
 
 import PrimeVue from "primevue/config";
+import ConfirmationService from "primevue/confirmationservice";
 import Button from "primevue/button";
 import Checkbox from "primevue/checkbox";
 import InputText from "primevue/inputtext";
 import Card from "primevue/card";
 import OverlayPanel from "primevue/overlaypanel";
 import Menubar from "primevue/menubar";
+import TabMenu from "primevue/tabmenu";
 import DataTable from "primevue/datatable";
+import ConfirmDialog from "primevue/confirmdialog";
 import Column from "primevue/column";
 import Badge from "primevue/badge";
 import Tag from "primevue/tag";
@@ -36,13 +39,16 @@ createApp(App)
     .use(PrimeVue)
     .use(router)
     .use(pinia)
+    .use(ConfirmationService)
     .component('Button', Button)
     .component('Checkbox', Checkbox)
     .component('InputText', InputText)
     .component('Card', Card)
     .component('OverlayPanel', OverlayPanel)
+    .component('TabMenu', TabMenu)
     .component('Menubar', Menubar)
     .component('DataTable', DataTable)
+    .component('ConfirmDialog', ConfirmDialog)
     .component('Column', Column)
     .component('Badge', Badge)
     .component('Tag', Tag)
